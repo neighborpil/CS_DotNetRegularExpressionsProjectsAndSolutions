@@ -13,7 +13,7 @@ namespace TestProject1
         [Test]
         public void ValidationExample1()
         {
-            // @ : 시작문자
+            // ^ : 시작문자
             // /d : 0-9
             // + : 하나 이상
             // $ : 종료문자
@@ -71,6 +71,48 @@ namespace TestProject1
 
                 match = match.NextMatch();
             }
+        }
+
+        [Test]
+        public void GroupExample()
+        {
+            // (?<그룹명>패턴) : 조건의 그룹핑, 추후 그룹단위로 뽑아 낼 수 있음
+            string pattern = @"(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})(?<hour>\d{2})(?<minute>\d{2})";
+
+            string text = "Timestamp=202009291251";
+            Match match = null;
+            try
+            {
+
+               match = Regex.Match(text, pattern);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine($"Text: {text}");
+
+            Assert.That(match?.Success, Is.EqualTo(true));
+
+            Assert.That(match?.Value, Is.EqualTo("202009291251"));
+            Assert.That(match?.Index, Is.EqualTo(text.IndexOf('2')));
+            Assert.That(match?.Length, Is.EqualTo("202009291251".Length));
+
+            Assert.That(match?.Groups["year"].Value, Is.EqualTo("2020"));
+            Assert.That(match?.Groups["year"].Success, Is.EqualTo(true));
+
+            Assert.That(match?.Groups["month"].Value, Is.EqualTo("09"));
+            Assert.That(match?.Groups["month"].Success, Is.EqualTo(true));
+
+            Assert.That(match?.Groups["day"].Value, Is.EqualTo("29"));
+            Assert.That(match?.Groups["day"].Success, Is.EqualTo(true));
+
+            Assert.That(match?.Groups["hour"].Value, Is.EqualTo("12"));
+            Assert.That(match?.Groups["hour"].Success, Is.EqualTo(true));
+
+            Assert.That(match?.Groups["minute"].Value, Is.EqualTo("51"));
+            Assert.That(match?.Groups["minute"].Success, Is.EqualTo(true));
         }
     }
 }
