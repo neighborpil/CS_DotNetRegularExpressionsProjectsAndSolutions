@@ -15,7 +15,7 @@ namespace TestProject1
         {
             // ^ : 시작문자
             // /d : 0-9
-            // + : 하나 이상
+            // + : 하나 이상{equals {1, }
             // $ : 종료문자
             string pattern = @"^\d+$";
 
@@ -113,6 +113,33 @@ namespace TestProject1
 
             Assert.That(match?.Groups["minute"].Value, Is.EqualTo("51"));
             Assert.That(match?.Groups["minute"].Success, Is.EqualTo(true));
+        }
+
+        [Test]
+        public void ReplaceExample()
+        {
+            // value 그룹 (?<value> )
+            // * : zero or more occurence of preceding character
+            // (,\d{3}) : ,XXX의 숫자가 0회 이상 반복
+            // \. : . 점, 소수점할때 사용
+            // (\.\d{2})? : .소수2자리가 0회 또는 1회 있음
+            // \s : space
+            // \s+ : 하나 이상의 스페이스
+            // ? : zero or one occurence (equal to {0, 1}
+            var pattern = @"(?<value>\d+(,\d{3})*(\.\d{2})?)\s+dollar(s)?";
+            string replacePattern = @"**USD ${value}**";
+
+            string text = @"Widget Unit cost: 12,000.56 dollars
+Taxes: 234.00 dollars
+Total: 12,234.56 dollars";
+
+            string newText = Regex.Replace(text, pattern, replacePattern);
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine($"Replace Pattern: {replacePattern}");
+            Assert.That(newText, Is.EqualTo(@"Widget Unit cost: **USD 12,000.56**
+Taxes: **USD 234.00**
+Total: **USD 12,234.56**"));
         }
     }
 }
