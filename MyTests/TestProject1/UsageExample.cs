@@ -35,8 +35,8 @@ namespace TestProject1
         public void ValidationExample2()
         {
             string pattern = @"^\d+$";
-            string[] positiveTest = { "123456", "456", "321082", "0820102" };
-            string[] negativeTest = { "ABCD", "A1234", "1234AB", "  123", "321  ", "  111   ", "123 4567", "123\n456" };
+            string[] positiveTest = {"123456", "456", "321082", "0820102"};
+            string[] negativeTest = {"ABCD", "A1234", "1234AB", "  123", "321  ", "  111   ", "123 4567", "123\n456"};
 
             foreach (var test in positiveTest)
             {
@@ -60,12 +60,12 @@ namespace TestProject1
             // \b : 글자 바운더리
             string pattern = @"\b\d{5}\b";
             string text = "NY Postal Codes are 10001, 10002, 10003, 10004";
-            var answer = new[] { "10001", "10002", "10003", "10004" };
+            var answer = new[] {"10001", "10002", "10003", "10004"};
 
 
             Match match = Regex.Match(text, pattern);
             var i = 0;
-            while(match.Success)
+            while (match.Success)
             {
                 Assert.That(match.Value, Is.EqualTo(answer[i++]));
 
@@ -84,12 +84,13 @@ namespace TestProject1
             try
             {
 
-               match = Regex.Match(text, pattern);
+                match = Regex.Match(text, pattern);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
+
             Console.WriteLine($"Pattern: {pattern}");
             Console.WriteLine($"Text: {text}");
 
@@ -140,6 +141,102 @@ Total: 12,234.56 dollars";
             Assert.That(newText, Is.EqualTo(@"Widget Unit cost: **USD 12,000.56**
 Taxes: **USD 234.00**
 Total: **USD 12,234.56**"));
+        }
+
+
+        public static string CelsiusToFahrenheit(Match m)
+        {
+            float degCelsius = float.Parse(m.Groups["celsius"].Value);
+
+            float degF = 32.0f + (degCelsius * 9.0f / 5.0f);
+
+            return degF + @"ºF";
+        }
+
+        [Test]
+        public void ReplaceExample2()
+        {
+            // (?<celsius> ) : celsius그룹
+            // \d+ : 하나 이상의 숫자
+            // \u00B0 : unicode의 특정 문자를 나타냄, º
+            string pattern = @"(?<celsius>\d+)\u00BAC";
+            string text = @"Today's temperature is 32ºC";
+
+            // MatchEvaluator : delegate로, Replace 함수 안에 넣을때 사용
+            string newText = Regex.Replace(text, pattern, new MatchEvaluator(CelsiusToFahrenheit));
+
+            Console.WriteLine(pattern);
+            Console.WriteLine(text);
+
+            Assert.That(newText, Is.EqualTo(@"Today's temperature is 89.6ºF"));
+        }
+
+        [Test]
+        public void SplitExample()
+        {
+            // \d+ : 하나 이상의 숫자
+            // \p : 일치하는 유니코드 범주를 검색
+            // \p{P} : 모든 문장부호
+            // \s : 공백문자
+            // \s* : 0개 이상의 공백문자
+            string pattern = @"\d+\p{P}\s*";
+            string text = @"Here is the shopping list: 1.     Cilantro   2) Carrot     3. Milk      4.Eggs";
+            string[] splitText = Regex.Split(text, pattern);
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine($"Text: {text}");
+
+            Assert.That(splitText[0].Trim(), Is.EqualTo("Here is the shopping list:"));
+            Assert.That(splitText[1].Trim(), Is.EqualTo("Cilantro"));
+            Assert.That(splitText[2].Trim(), Is.EqualTo("Carrot"));
+            Assert.That(splitText[3].Trim(), Is.EqualTo("Milk"));
+            Assert.That(splitText[4].Trim(), Is.EqualTo("Eggs"));
+        }
+
+        [Test]
+        public void VerbatimStringExample()
+        {
+            // \x09 : 아스키 코드 Horizontal tab
+            string[] regularString =
+            {
+                "\\d\t\\d", "\\d\x09\\d", "Hello\"World",
+                "\\\\server\\share\\file.txt", "Line1\nLine2"
+            };
+
+            // VerbatimString : 텍스트의 앞에 '@'을 붙여줘서 백슬래쉬를 줄이고 문자 그대로 표현하는 것
+            // 문자 그대로 읽기 때문에 특정 코드가 아니라, 문자 그 자체를 표시한다.
+            // 쌍따옴표는 ""를 사용한다
+            // line feed는 문자 그대로 \n로 푯된다.
+            string[] verbatimString =
+            {
+                @"\d\t\d", @"\d\x09\d", @"Hello""World",
+                @"\\server\share\file.txt", @"Line1\nLine2"
+            };
+
+            for (int i = 0; i < regularString.Length; i++)
+            {
+                Console.WriteLine(regularString[i]);
+                Console.WriteLine(verbatimString[i]);
+            }
+
+            /*
+            # Result
+            \d	\d
+            \d\t\d
+
+            \d	\d
+            \d\x09\d
+
+            Hello"World
+            Hello"World
+
+            \\server\share\file.txt
+            \\server\share\file.txt
+
+            Line1
+            Line2
+            Line1\nLine2
+            */
         }
     }
 }
