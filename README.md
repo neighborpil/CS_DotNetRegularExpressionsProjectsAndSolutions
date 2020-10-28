@@ -32,3 +32,29 @@ https://www.unicode.org/versions/Unicode8.0.0/
   - Problem: Find all occurrences of a or b
   - Pattern: [ab]
   - Text: this is a big test
+
+ 4. Set based - Negation '^'
+  - Problem: Find all occurrences of characters that are NOT (a or b)
+  - Pattern [^ab]
+  - Text: this is a big test
+
+  - needs to be first character inside the set
+   + Pattern: [a^b] => indicates a set with members(a, b, ^) and will match a literal ^
+   + Text: this is a ^ big test
+ 5. Range of characters
+  - Problem: Find all occurrences of (a, b, c, d)
+  - Pattern: [a-d] (is equal to [abcd])
+  - Text: this is a definitive test 
+
+ 6. Multiple range of characters
+  - Problem: find all occurrences of (a, b, c, d, x, y, z, 0, 1, 2, 3)
+  - Pattern: [a-dx-z0-3]
+  - Text: x-ray 3 won't work for this test
+
+  - Negate the whole range with ^
+  - Problem: Find all occurrences of characters not in (a, b, c, d, x, y, z, 0, 1, 2, 3)
+  - Pattern: [^a-dx-z0-3]
+
+ 7. Whild card character
+  - Dot or full stop character matches every character except new line \n
+ 
