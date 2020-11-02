@@ -83,3 +83,48 @@ https://www.unicode.org/versions/Unicode8.0.0/
   3. Word boundary
    - Pattern: \blog\b => is instruction to match only on word boundary
    - Text: catalog of log
+
+  4. Start of string or line ^
+   - Problem: Find occurrences of 'apple' at beginning of string or line
+   - Pattern: ^apple
+   - Text: apple Grows on apple tree
+  
+  5. ^ - Multi-line Text
+   - Pattern: ^apple
+   - Text:
+    apple 1 grows on apple tree
+    apple 2 grows on apple tree
+   - Internal String: "apple 1 grows on apple tree\r\napple 2 grows on apple tree\r\n"
+    + Windows uses \r\n to represent new line
+    => need to turn-on multi-line mode to interprete embedded lines
+   
+  6. ^ - Turn on multi-line mode (?m)
+   - Problem: Find occurrences of 'apple' at beginning of string or line
+   - Pattern: (?m)^apple
+   - Text: 
+    apple 1 grows on apple tree
+    apple 2 grows on apple tree
+
+  7. End of string or line $(matches end of string or \n)
+   - Problem: Find occurrences of 'apple' at end of string or line
+   - Patten: apple$
+   - Text: apple apple
+
+  8. End of string or line $ (matches end of string or \n)
+   - Problem: Find occurrences of 'apple' at end of string or line
+   - Pattern: apple$
+   - Text: apple apple
+  
+  9. $ - Multi-line text
+   - Problem: Find occurrences of 'apple' at end of string or line
+   - Pattern: apple$
+   - Text:
+    apple
+    apple
+   - Internal String: "apple\r\napple"
+
+  10. $ - Turn on multi-line mode (?m) and include \r as optional character
+   - Problem: Find occurrences of 'apple' at end of string or line
+   - Pattern: (?m)apple\r?$
+     ($ 사인은 \n 또는 end of string만 캐치한다. 하지만 윈도우즈는 \r\n을 줄바꿈으로 쓰므로 \r?이 필요)
+   - Text: apple appple
