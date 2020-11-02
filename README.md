@@ -55,6 +55,31 @@ https://www.unicode.org/versions/Unicode8.0.0/
   - Problem: Find all occurrences of characters not in (a, b, c, d, x, y, z, 0, 1, 2, 3)
   - Pattern: [^a-dx-z0-3]
 
- 7. Whild card character
+ 7. Whild card character .  <= Dot!
   - Dot or full stop character matches every character except new line \n
+  - Dot may have a performance issue. Use carefullly.
  
+ 8. Escape with \
+  - Problem: Find all occurrences of '.'(dot)
+  - Pattern: \.
+  - Text: This. Is a Test.
+
+ 9. Control Characters(tab, newline, carriage return and so forth)
+  - Problem: Find all occurrences of tab
+  - Pattern: \t
+  - Text: One		.Two		
+ 
+ # Anchors
+  1. Anchors are special syntex used for specifying.
+   - Start of string or line
+   - End of string or line
+   - Word boundary
+   - And so forth...
+  2. Search for text
+   - Problem: Find all occurrences of word 'log'
+   - Pattern: log
+   - Text: catalog of log
+
+  3. Word boundary
+   - Pattern: \blog\b => is instruction to match only on word boundary
+   - Text: catalog of log
