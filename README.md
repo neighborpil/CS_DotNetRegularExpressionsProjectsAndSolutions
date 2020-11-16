@@ -128,3 +128,20 @@ https://www.unicode.org/versions/Unicode8.0.0/
    - Pattern: (?m)apple\r?$
      ($ 사인은 \n 또는 end of string만 캐치한다. 하지만 윈도우즈는 \r\n을 줄바꿈으로 쓰므로 \r?이 필요)
    - Text: apple appple
+
+ # Character Classes
+  - Characer classes are readymade shortcuts that represents a set of characters
+
+  1. Decimal Digit \d
+   - Problem: Check if valid decimal digit(0-9)
+   - Pattern 1: [0123456789]
+   - Pattern 2: [0-9]
+   - Pattern 3: \d
+   - Not a decimal digit: \D
+  
+  2. Word Character \w
+   - Problem: Check i a character is a valid letter of an alphabet (any language) or digit(숫자도 포함한다)
+   - Pattern: \w
+   - Text: F16, F18, ㄱ, ㄴ
+   - Not a character: \W
+
