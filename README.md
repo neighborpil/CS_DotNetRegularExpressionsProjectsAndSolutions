@@ -145,3 +145,19 @@ https://www.unicode.org/versions/Unicode8.0.0/
    - Text: F16, F18, ㄱ, ㄴ
    - Not a character: \W
 
+  3. Whtie space character \s
+   - Matches space, tab, carriage return, new line and so forth
+   - Problem: Check for white space character
+   - Pattern: \s
+   - Text: One	tab space
+          Two		tab
+   - Not a white space character: \S
+
+  4. Unicode category or Block \p{category}
+   - Problem: Find occurrences of punctuation characters(구분문자)
+   - Pattern: \p{P} => 구분문자 전체
+   - Text: "one,two;three!FOUR?Five*" => ",;!?*"
+
+   - Problem: Find uppercase characters
+   - Pattern: \p{Lu} => 대문자 영어
+   - Text: "one,two;three!FOUR?Five*"
