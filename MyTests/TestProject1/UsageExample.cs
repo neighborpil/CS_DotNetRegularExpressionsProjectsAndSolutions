@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -237,6 +238,109 @@ Total: **USD 12,234.56**"));
             Line2
             Line1\nLine2
             */
+
+
+        }
+        public bool IsInteger(string text)
+        {
+            string pattern = @"\d+";
+
+            return Regex.IsMatch(text, pattern);
+        }
+
+        [Test]
+        public void IntegerTest()
+        {
+            string text = "1234";
+
+            Assert.That(IsInteger(text), Is.True);
+
+            string text2 = "asdf";
+
+            Assert.That(IsInteger(text2), Is.False);
+        }
+
+        [Test]
+        public void IntegerUnitTest()
+        {
+            // 규칙이 /d+인경우 숫자외에 다른 글자가 있어도 매치된다
+            var passList = new string[]{"123", "456", "900", "0991"};
+            var failList = new string[]{"a1234", "123a", "1 2 3", "1\t2", " 12", "45 "};
+
+            // integer misclassified as non-integer
+            var falseNegative = new List<string>();
+            // incorrectly classified as integer
+            var falsePositive = new List<string>();
+
+            foreach (string s in passList)
+            {
+                if(!IsInteger(s))
+                {
+                    falseNegative.Add(s);
+                }
+            }
+
+            foreach (string s in failList)
+            {
+                if(IsInteger(s))
+                {
+                    falsePositive.Add(s);
+                }
+            }
+
+            var falseNegativeAnswer = new List<string>()
+            {
+
+            };
+            var falsePositiveAnswer = new List<string>()
+            {
+                "a1234", "123a", "1 2 3", "1\t2", " 12", "45 "
+            };
+            
+            Assert.That(falseNegative.Count, Is.EqualTo(0));
+            for (int i = 0; i < falsePositiveAnswer.Count; i++)
+            {
+                Assert.That(falsePositiveAnswer[i], Is.EqualTo(falsePositive[i]));
+                
+            }
+
+        }
+
+        public bool IsInteger2(string text)
+        {
+            string pattern = @"^\d+$";
+
+            return Regex.IsMatch(text, pattern);
+        }
+
+        [Test]
+        public void IntegerUnitTest2()
+        {
+            var passList = new string[] { "123", "456", "900", "0991" };
+            var failList = new string[] { "a1234", "123a", "1 2 3", "1\t2", " 12", "45 " };
+
+            // integer misclassified as non-integer
+            var negative = new List<string>();
+            // incorrectly classified as integer
+            var positive = new List<string>();
+
+            foreach (string s in passList)
+            {
+                if (!IsInteger2(s))
+                {
+                    negative.Add(s);
+                }
+            }
+
+            foreach (string s in failList)
+            {
+                if (IsInteger2(s))
+                {
+                    positive.Add(s);
+                }
+            }
+            Assert.That(positive.Count, Is.EqualTo(0));
+            Assert.That(negative.Count, Is.EqualTo(0));
         }
     }
 }
