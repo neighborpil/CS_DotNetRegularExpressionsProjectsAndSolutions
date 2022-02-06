@@ -342,5 +342,81 @@ Total: **USD 12,234.56**"));
             Assert.That(positive.Count, Is.EqualTo(0));
             Assert.That(negative.Count, Is.EqualTo(0));
         }
+
+        [Test]
+        public void FirstMatch()
+        {
+            // Use Regex.Match to retrive matching substring
+            string pattern = @"\d+";
+            string text = "my lucky number is 42";
+
+            string answer = "42";
+
+            Match match = Regex.Match(text, pattern);
+
+
+            Assert.That(match.Success, Is.True);
+            Assert.That(match.Value, Is.EqualTo(answer));
+            Assert.That(match.Length, Is.EqualTo(answer.Length));
+        }
+
+        [Test]
+        public void IterateMatches()
+        {
+            // Use Regex.Match to iterate all matches
+            string pattern = @"\d+";
+            string text = "my postal code are 1001, 1002, 1003, 10005";
+
+            var answer = new string[] {"1001", "1002", "1003", "10005"};
+
+            Match match = Regex.Match(text, pattern);
+
+            int i = 0;
+            while (match.Success)
+            {
+                Assert.That(match.Value, Is.EqualTo(answer[i]));
+                Assert.That(match.Length, Is.EqualTo(answer[i].Length));
+                i++;
+                match = match.NextMatch();
+            }
+
+        }
+
+        [Test]
+        public void IterateMatchesLazy()
+        {
+            // Use Regex.Match to iterate all matches
+            string pattern = @"\d+";
+            string text = "my postal code are 1001, 1002, 1003, 10005";
+
+            var answer = new string[] { "1001", "1002", "1003", "10005" };
+
+
+            MatchCollection matchCollection = Regex.Matches(text, pattern);
+
+            int i = 0;
+            // Lazy Evaluation
+            foreach (Match match in matchCollection)
+            {
+                Assert.That(match.Value, Is.EqualTo(answer[i]));
+                Assert.That(match.Length, Is.EqualTo(answer[i].Length));
+                i++;
+            }
+            
+            matchCollection = Regex.Matches(text, pattern);
+
+            Console.WriteLine($"Total Matches: {matchCollection.Count}");
+            //Match match = Regex.Match(text, pattern);
+
+            //int i = 0;
+            //while (match.Success)
+            //{
+            //    Assert.That(match.Value, Is.EqualTo(answer[i]));
+            //    Assert.That(match.Length, Is.EqualTo(answer[i].Length));
+            //    i++;
+            //    match = match.NextMatch();
+            //}
+
+        }
     }
 }
