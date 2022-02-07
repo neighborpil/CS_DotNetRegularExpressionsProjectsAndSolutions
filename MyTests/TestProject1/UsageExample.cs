@@ -391,7 +391,13 @@ Total: **USD 12,234.56**"));
 
             var answer = new string[] { "1001", "1002", "1003", "10005" };
 
-
+            /*
+            ※ Matches는 Lazy Evaluation이 일어난다.
+             - 만약 문장이 많고 조건이 까다로울 경우 시간이 많이 걸린다
+             - 복사 등의 시간이 오래 걸리는 작업을 할 경우
+             - Strict Evaluation을 사용한다면 반복문 돌때마다 처음부터 다시 찾는다
+             - Lazy Evaluation을 사용할 경우 반복횟수가 줄어든다
+            */
             MatchCollection matchCollection = Regex.Matches(text, pattern);
 
             int i = 0;
@@ -402,21 +408,22 @@ Total: **USD 12,234.56**"));
                 Assert.That(match.Length, Is.EqualTo(answer[i].Length));
                 i++;
             }
-            
+
+
+            Console.WriteLine();
+
+            // Scan entire text
             matchCollection = Regex.Matches(text, pattern);
 
             Console.WriteLine($"Total Matches: {matchCollection.Count}");
-            //Match match = Regex.Match(text, pattern);
 
-            //int i = 0;
-            //while (match.Success)
-            //{
-            //    Assert.That(match.Value, Is.EqualTo(answer[i]));
-            //    Assert.That(match.Length, Is.EqualTo(answer[i].Length));
-            //    i++;
-            //    match = match.NextMatch();
-            //}
+            Match[] result = new Match[matchCollection.Count];
+            matchCollection.CopyTo(result, 0);
 
+            foreach (Match match in result)
+            {
+                Console.WriteLine($"\tFound a match: {match.Value} at index: {match.Index}, length: {match.Length}"); 
+            }
         }
     }
 }
