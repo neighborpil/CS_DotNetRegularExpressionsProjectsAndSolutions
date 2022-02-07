@@ -422,8 +422,186 @@ Total: **USD 12,234.56**"));
 
             foreach (Match match in result)
             {
-                Console.WriteLine($"\tFound a match: {match.Value} at index: {match.Index}, length: {match.Length}"); 
+                Console.WriteLine($"\tFound a match: {match.Value} at index: {match.Index}, length: {match.Length}");
             }
+        }
+
+        [Test]
+        public void GroupIndexed()
+        {
+            // Access Group using index
+            string pattern = @"\d{4}\d{2}\d{2}";
+            string text = "Start Date: 20200920";
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine();
+            Console.WriteLine($"Text: {text}");
+            Console.WriteLine();
+
+            Match match = Regex.Match(text, pattern);
+            if (match.Success)
+            {
+                Console.WriteLine($"Found a match: ${match.Value} at index: {match.Index} length: {match.Length}");
+            }
+            else
+            {
+                Console.WriteLine("No Match");
+            }
+        }
+
+        [Test]
+        public void GroupIndexed2()
+        {
+            // Access Group using index
+            string pattern = @"(\d{4})(\d{2})(\d{2})";
+            string text = "Start Date: 20200920";
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine();
+            Console.WriteLine($"Text: {text}");
+            Console.WriteLine();
+
+            Match match = Regex.Match(text, pattern);
+            if (match.Success)
+            {
+                Console.WriteLine($"Found a match: ${match.Value} at index: {match.Index} length: {match.Length}");
+                for (int i = 0; i < match.Groups.Count; i++)
+                {
+                    Console.WriteLine($" Group [{i}]\t {match.Groups[i].Value}\t at index {match.Groups[i].Index}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No Match");
+            }
+        }
+
+        [Test]
+        public void GroupIndexed3()
+        {
+            // Access Group using index
+            string pattern = @"(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})";
+            string text = "Start Date: 20200920";
+
+            string[] namedGroups = {"year", "month", "day"};
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine();
+            Console.WriteLine($"Text: {text}");
+            Console.WriteLine();
+
+            Match match = Regex.Match(text, pattern);
+            if (match.Success)
+            {
+                Console.WriteLine($"Found a match: ${match.Value} at index: {match.Index} length: {match.Length}");
+
+                foreach (var name in namedGroups)
+                {
+                    Console.WriteLine($" Group {name}\t {match.Groups[name].Value}\t at index {match.Groups[name].Index}");
+                }
+                for (int i = 0; i < match.Groups.Count; i++)
+                {
+                }
+            }
+            else
+            {
+                Console.WriteLine("No Match");
+            }
+        }
+
+        [Test]
+        public void Replace()
+        {
+            // Use Regex.Replace method to find and replace
+            // Reformat date YYYYMMDD => MM-DD-YYYY
+
+            string pattern = @"(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})";
+
+            // Change date foramt 20200920 => 09-20-2020
+            string text = "Start Date: 20200920, End Date: 20200920";
+
+            string replacementPattern = @"${month}-${day}-${year}";
+
+            string newText = Regex.Replace(text, pattern, replacementPattern);
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine();
+            Console.WriteLine($"Text: {text}");
+            Console.WriteLine();
+            Console.WriteLine($"Replacement Pattern: {replacementPattern}");
+            Console.WriteLine();
+
+            Console.WriteLine($"Original Text\t{text}");
+            Console.WriteLine();
+
+            Console.WriteLine($"New Text\t{newText}");
+            Console.WriteLine();
+        }
+
+        public static string FormatDate(Match match)
+        {
+            DateTime dateTime = new DateTime(
+                int.Parse(match.Groups["year"].Value),
+                int.Parse(match.Groups["month"].Value),
+                int.Parse(match.Groups["day"].Value));
+
+            
+            return dateTime.ToString("MMM-dd-yyyy");
+        }
+
+        [Test]
+        public void ReplaceCustom()
+        {
+            // Use Regex.Replace method to find and replace
+            // Reformat date YYYYMMDD => MM-DD-YYYY
+
+            string pattern = @"(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})";
+
+            // Change date foramt 20200920 => Sep-20-2020
+            string text = "Start Date: 20200920, End Date: 20200920";
+
+            string replacementPattern = @"${month}-${day}-${year}";
+
+            string newText = Regex.Replace(text, pattern, new MatchEvaluator(FormatDate));
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine();
+            Console.WriteLine($"Text: {text}");
+            Console.WriteLine();
+            Console.WriteLine($"Replacement Pattern: {replacementPattern}");
+            Console.WriteLine();
+
+            Console.WriteLine($"Original Text\t{text}");
+            Console.WriteLine();
+
+            Console.WriteLine($"New Text\t{newText}");
+            Console.WriteLine();
+        }
+
+
+        [Test]
+        public void SplitExample_new()
+        {
+            // Use Regex.Split method to split text based on regex pattern
+
+            string pattern = @";";
+            string text = "a-c;x;y;1";
+
+            string[] splitText = Regex.Split(text, pattern);
+
+
+            Console.WriteLine($"Pattern: {pattern}");
+            Console.WriteLine();
+            Console.WriteLine($"Text: {text}");
+            Console.WriteLine();
+
+            Console.WriteLine($"Original Text\t{text}");
+            Console.WriteLine();
+
+            Console.WriteLine($"Split Text");
+            Console.WriteLine(string.Join(Environment.NewLine, splitText));
+            Console.WriteLine();
+
         }
     }
 }
